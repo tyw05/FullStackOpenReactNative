@@ -1,6 +1,7 @@
-import { View, StyleSheet, Text, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, Platforma, Platform } from 'react-native';
 import Constants from 'expo-constants';
 import { Link } from 'react-router-native';
+import theme from '../theme';
 
 const styles = StyleSheet.create({
     container: {
@@ -15,6 +16,11 @@ const styles = StyleSheet.create({
         paddingTop: 20,
         paddingLeft: 10,
         paddingBottom: 20,
+        fontFamily: Platform.select({
+            android: theme.fonts.android,
+            ios: theme.fonts.ios,
+            default: theme.fonts.main,
+        })
     }
     // ...
 });
