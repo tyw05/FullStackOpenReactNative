@@ -1,7 +1,12 @@
-import { View, StyleSheet, Text, ScrollView, Platforma, Platform } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, Platforma, Platform, Pressable } from 'react-native';
 import Constants from 'expo-constants';
 import { Link } from 'react-router-native';
 import theme from '../theme';
+import { USER_INFO } from '../graphql/query';
+import { useQuery } from '@apollo/client';
+import useAuthStorage from '../hooks/useAuthStorage';
+import { useApolloClient } from '@apollo/client';
+import { useNavigate } from 'react-router-native';
 
 const styles = StyleSheet.create({
     container: {
@@ -26,6 +31,17 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
+    const authStorage = useAuthStorage();
+    const apolloClient = useApolloClient();
+    const info = useQuery(USER_INFO, { pollInterval: 2000})
+    const navigate = useNavigate()
+   
+    const signout = async () => {
+        await authStorage.removeAccessToken()
+        apolloClient.resetStore();
+        navigate("/signin")
+    }
+
     return <View style={styles.container}>
         {
             <>
@@ -33,9 +49,16 @@ const AppBar = () => {
                     <Link to="/">
                         <Text style={styles.text}>Repositories</Text>
                     </Link>
-                    <Link to="/signin">
-                        <Text style={styles.text}>Sign In</Text>
-                    </Link>
+                    {info.data.me === null && (
+                        <Link to="/signin">
+                            <Text style={styles.text}>Sign In</Text>
+                        </Link>
+                    )}
+                    {info.data.me !== null && (
+                        <Pressable onPress={signout}>
+                            <Text style={styles.text}>Sign Out</Text>
+                        </Pressable>
+                    )}
                 </ScrollView>
             </>
         }</View>;

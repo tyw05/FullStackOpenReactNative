@@ -38,7 +38,9 @@ const RepositoryItem = ({ repo }) => {
                 <Image style={styles.tinyLogo} source={{ uri: repo.ownerAvatarUrl }} />
                 <View style={[{ marginTop: 10, marginBottom: 10 }]}>
                     <Text style={[styles.text, { fontWeight: 'bold' }]}>{repo.fullName}</Text>
-                    <Text style={styles.text}>{repo.description}</Text>
+                    <View style={[{ flexDirection: 'row', width: 300 }]}>
+                        <Text style={[styles.text, { flex: 1, flexWrap: 'wrap' }]}>{repo.description}</Text>
+                    </View>
                     <Pressable style={styles.language}>
                         <Text style={[{ color: 'white' }]}>{repo.language}</Text>
                     </Pressable>
